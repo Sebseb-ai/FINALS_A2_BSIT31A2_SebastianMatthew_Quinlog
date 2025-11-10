@@ -1,0 +1,59 @@
+using TriviaGame.Data;
+using TriviaGame.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace TriviaGame.Services
+{
+    public class TriviaService : ITriviaService
+    {
+        private readonly TriviaContext _context;
+        private readonly Random _random;
+
+        public TriviaService(TriviaContext context)
+        {
+            _context = context;
+            _random = new Random();
+        }
+
+        public GameSession StartNewGame()
+        {
+            var questions = GetQuestions(5);
+            return new GameSession { Questions = questions };
+        }
+
+        public TriviaQuestion GetCurrentQuestion(GameSession session)
+        {
+            if (session.CurrentQuestionIndex < session.Questions.Count)
+            {
+                return session.Questions[session.CurrentQuestionIndex];
+            }
+            return null;
+        }
+
+        public bool SubmitAnswer(GameSession session, string answer)
+        {
+            var currentQuestion = GetCurrentQuestion(session);
+            if (currentQuestion != null && answer == currentQuestion.CorrectAnswer)
+            {
+                session.Score += currentQuestion.Difficulty * 10;
+                session.CurrentQuestionIndex++;
+                return true;
+            }
+            session.CurrentQuestionIndex++;
+            return false;
+        }
+
+        public bool IsGameComplete(GameSession session)
+        {
+            return session.CurrentQuestionIndex >= session.Questions.Count;
+        }
+
+        public List<TriviaQuestion> GetQuestions(int count = 5)
+        {
+            return _context.TriviaQuestions
+                .OrderBy(q => Guid.NewGuid())
+                .Take(count)
+                .ToList();
+        }
+    }
+}

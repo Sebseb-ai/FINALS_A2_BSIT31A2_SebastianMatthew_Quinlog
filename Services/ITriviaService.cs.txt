@@ -1,0 +1,13 @@
+using TriviaGame.Models;
+
+namespace TriviaGame.Services
+{
+    public interface ITriviaService
+    {
+        GameSession StartNewGame();
+        TriviaQuestion GetCurrentQuestion(GameSession session);
+        bool SubmitAnswer(GameSession session, string answer);
+        bool IsGameComplete(GameSession session);
+        List<TriviaQuestion> GetQuestions(int count = 5);
+    }
+}

@@ -1,0 +1,22 @@
+@model TriviaGame.Models.GameSession
+@{
+    ViewData["Title"] = "Game Results";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Game Complete!</h1>
+    
+    <div class="card mt-4">
+        <div class="card-body">
+            <h2>Your Score: <span class="text-primary">@Model.Score</span></h2>
+            <p>You answered @Model.Questions.Count questions</p>
+            <p>Time taken: @((DateTime.Now - Model.StartTime).ToString(@"mm\:ss"))</p>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <form asp-action="Restart" method="post">
+            <button type="submit" class="btn btn-success btn-lg">Play Again</button>
+        </form>
+    </div>
+</div>

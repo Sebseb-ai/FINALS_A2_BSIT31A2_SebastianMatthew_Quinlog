@@ -1,0 +1,98 @@
+using Microsoft.AspNetCore.Mvc;
+using TriviaGame.Models;
+using TriviaGame.Services;
+using System.Text.Json;
+
+namespace TriviaGame.Controllers
+{
+    public class TriviaController : Controller
+    {
+        private readonly ITriviaService _triviaService;
+        private const string SessionKey = "GameSession";
+
+        public TriviaController(ITriviaService triviaService)
+        {
+            _triviaService = triviaService;
+        }
+
+        private GameSession GetGameSession()
+        {
+            var sessionData = HttpContext.Session.GetString(SessionKey);
+            if (string.IsNullOrEmpty(sessionData))
+            {
+                return null;
+            }
+            return JsonSerializer.Deserialize<GameSession>(sessionData);
+        }
+
+        private void SaveGameSession(GameSession session)
+        {
+            var sessionData = JsonSerializer.Serialize(session);
+            HttpContext.Session.SetString(SessionKey, sessionData);
+        }
+
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult StartGame()
+        {
+            var gameSession = _triviaService.StartNewGame();
+            SaveGameSession(gameSession);
+            return RedirectToAction("Question");
+        }
+
+        public IActionResult Question()
+        {
+            var session = GetGameSession();
+            if (session == null || _triviaService.IsGameComplete(session))
+            {
+                return RedirectToAction("Index");
+            }
+
+            var question = _triviaService.GetCurrentQuestion(session);
+            return View(question);
+        }
+
+        [HttpPost]
+        public IActionResult SubmitAnswer(string answer)
+        {
+            var session = GetGameSession();
+            if (session == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            bool isCorrect = _triviaService.SubmitAnswer(session, answer);
+            SaveGameSession(session);
+
+            if (_triviaService.IsGameComplete(session))
+            {
+                return RedirectToAction("Results");
+            }
+
+            TempData["LastAnswerCorrect"] = isCorrect;
+            return RedirectToAction("Question");
+        }
+
+        public IActionResult Results()
+        {
+            var session = GetGameSession();
+            if (session == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            return View(session);
+        }
+
+        [HttpPost]
+        public IActionResult Restart()
+        {
+            HttpContext.Session.Remove(SessionKey);
+            return RedirectToAction("Index");
+        }
+    }
+}

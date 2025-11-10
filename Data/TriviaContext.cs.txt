@@ -1,0 +1,81 @@
+using Microsoft.EntityFrameworkCore;
+using TriviaGame.Models;
+
+namespace TriviaGame.Data
+{
+    public class TriviaContext : DbContext
+    {
+        public TriviaContext(DbContextOptions<TriviaContext> options) : base(options)
+        {
+        }
+
+        public DbSet<TriviaQuestion> TriviaQuestions { get; set; } = null!;
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Seed initial data
+            modelBuilder.Entity<TriviaQuestion>().HasData(
+                new TriviaQuestion
+                {
+                    Id = 1,
+                    Question = "What is the capital of France?",
+                    CorrectAnswer = "Paris",
+                    OptionA = "London",
+                    OptionB = "Berlin",
+                    OptionC = "Paris",
+                    OptionD = "Madrid",
+                    Category = "Geography",
+                    Difficulty = 1
+                },
+                new TriviaQuestion
+                {
+                    Id = 2,
+                    Question = "Which planet is known as the Red Planet?",
+                    CorrectAnswer = "Mars",
+                    OptionA = "Venus",
+                    OptionB = "Mars",
+                    OptionC = "Jupiter",
+                    OptionD = "Saturn",
+                    Category = "Science",
+                    Difficulty = 1
+                },
+                new TriviaQuestion
+                {
+                    Id = 3,
+                    Question = "What is the largest mammal in the world?",
+                    CorrectAnswer = "Blue Whale",
+                    OptionA = "Elephant",
+                    OptionB = "Giraffe",
+                    OptionC = "Blue Whale",
+                    OptionD = "Polar Bear",
+                    Category = "Animals",
+                    Difficulty = 2
+                },
+                new TriviaQuestion
+                {
+                    Id = 4,
+                    Question = "Who wrote 'Romeo and Juliet'?",
+                    CorrectAnswer = "William Shakespeare",
+                    OptionA = "Charles Dickens",
+                    OptionB = "Jane Austen",
+                    OptionC = "William Shakespeare",
+                    OptionD = "Mark Twain",
+                    Category = "Literature",
+                    Difficulty = 2
+                },
+                new TriviaQuestion
+                {
+                    Id = 5,
+                    Question = "What is the chemical symbol for gold?",
+                    CorrectAnswer = "Au",
+                    OptionA = "Go",
+                    OptionB = "Gd",
+                    OptionC = "Au",
+                    OptionD = "Ag",
+                    Category = "Science",
+                    Difficulty = 3
+                }
+            );
+        }
+    }
+}

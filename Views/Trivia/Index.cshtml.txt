@@ -1,0 +1,14 @@
+@{
+    ViewData["Title"] = "Trivia Game";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to the Trivia Game!</h1>
+    <p class="lead">Test your knowledge with our exciting trivia questions.</p>
+    
+    <div class="mt-5">
+        <form asp-action="StartGame" method="post">
+            <button type="submit" class="btn btn-primary btn-lg">Start New Game</button>
+        </form>
+    </div>
+</div>

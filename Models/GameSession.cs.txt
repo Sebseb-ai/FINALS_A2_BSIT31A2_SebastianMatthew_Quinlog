@@ -1,0 +1,16 @@
+namespace TriviaGame.Models
+{
+    public class GameSession
+    {
+        public int CurrentQuestionIndex { get; set; }
+        public int Score { get; set; }
+        public List<TriviaQuestion> Questions { get; set; }
+        public DateTime StartTime { get; set; }
+        
+        public GameSession()
+        {
+            Questions = new List<TriviaQuestion>();
+            StartTime = DateTime.Now;
+        }
+    }
+}

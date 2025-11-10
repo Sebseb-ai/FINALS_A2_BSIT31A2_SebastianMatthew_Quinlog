@@ -1,0 +1,37 @@
+@model TriviaGame.Models.TriviaQuestion
+@{
+    ViewData["Title"] = "Question";
+}
+
+<div class="container">
+    @if (TempData["LastAnswerCorrect"] != null)
+    {
+        <div class="alert alert-@((bool)TempData["LastAnswerCorrect"] ? "success" : "danger")">
+            @((bool)TempData["LastAnswerCorrect"] ? "✅ Correct!" : "❌ Incorrect!")
+        </div>
+    }
+
+    <div class="card">
+        <div class="card-header">
+            <h2>Question</h2>
+            <span class="badge bg-secondary">@Model.Category</span>
+            <span class="badge bg-info">Difficulty: @Model.Difficulty/5</span>
+        </div>
+        <div class="card-body">
+            <h4 class="card-title">@Model.Question</h4>
+            
+            <form asp-action="SubmitAnswer" method="post" class="mt-4">
+                <div class="list-group">
+                    <button type="submit" name="answer" value="@Model.OptionA" 
+                            class="list-group-item list-group-item-action">A) @Model.OptionA</button>
+                    <button type="submit" name="answer" value="@Model.OptionB" 
+                            class="list-group-item list-group-item-action">B) @Model.OptionB</button>
+                    <button type="submit" name="answer" value="@Model.OptionC" 
+                            class="list-group-item list-group-item-action">C) @Model.OptionC</button>
+                    <button type="submit" name="answer" value="@Model.OptionD" 
+                            class="list-group-item list-group-item-action">D) @Model.OptionD</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
